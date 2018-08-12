@@ -67,7 +67,6 @@ model = Sequential(
     # Fully connected layer 2 to shape (10) for 10 classes
     Dense(10),
     Activation('softmax'),
-
     ]
 )
 
