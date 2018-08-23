@@ -11,9 +11,9 @@ from keras.optimizers import Adam
 #print(X_train[0])
 # data pre-processing 此处，在每一个图像上再套上一个[]
 #print(X_train)
-X_train = X_train.reshape(-1, 1,28, 28)/255.
+X_train = X_train.reshape(-1, 1, 28, 28)/255.
 #print(X_train[0])
-X_test = X_test.reshape(-1, 1,28, 28)/255.
+X_test = X_test.reshape(-1, 1, 28, 28)/255.
 print(y_train)
 y_train = np_utils.to_categorical(y_train,num_classes=10)
 print(y_train)
