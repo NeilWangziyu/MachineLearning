@@ -84,7 +84,6 @@ class Lenet(nn.Module):
 
 
 
-
 cnn = Lenet()
 print(cnn)
 #net architecture
