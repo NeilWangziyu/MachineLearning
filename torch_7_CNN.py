@@ -92,7 +92,8 @@ loss_func = nn.CrossEntropyLoss()                # the target label is not one-h
 from matplotlib import cm
 try:
     from sklearn.manifold import TSNE; HAS_SK = True
-except: HAS_SK = False; print('Please install sklearn for layer visualization')
+except:
+    HAS_SK = False; print('Please install sklearn for layer visualization')
 
 def plot_with_labels(lowDWeights, labels):
     plt.cla()

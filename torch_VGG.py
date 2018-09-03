@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.utils.data as Data
 from torch.autograd import Variable
-
 import torchvision
 import matplotlib.pyplot as plt
 import os
