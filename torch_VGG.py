@@ -116,6 +116,7 @@ for epoch in range(EPOCH):
 
 
 
+
 # print 10 prediction form test dataset
 test_output, _ = cnn(test_x[:10])
 pred_y = torch.max(test_output, 1)[1].data.numpy().squeeze()
