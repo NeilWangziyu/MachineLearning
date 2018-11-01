@@ -10,7 +10,7 @@ BATCH_SIZE = 64
 TIME_STEP = 28
 INPUT_SIZE = 28
 LR = 0.01
-DOWNLOAD_MINIST = False
+DOWNLOAD_MINIST = True
 
 
 #minist digital dataset
@@ -19,7 +19,6 @@ train_data = dsets.MNIST(
     train = True,                        # this is training data
     transform = transforms.ToTensor(),  # Converts a PIL.Image or numpy.ndarray to
                                         # torch.FloatTensor of shape (C x H x W) and normalize in the range [0.0, 1.0]
-
     download = DOWNLOAD_MINIST,
 )
 
@@ -77,7 +76,7 @@ loss_func = nn.CrossEntropyLoss()
 for epoch in range(EPOCH):
     for step, (b_x, b_y) in enumerate(train_loader):         # gives batch data
         b_x = b_x.view(-1, 28, 28)               # reshape x to (batch, time_step, input_size)
-
+        print(b_x.shape)
         output = rnn(b_x)                        # rnn output
         loss = loss_func(output, b_y)         # cross entropy loss
         optimizer.zero_grad()                # clear gradients for this training step
