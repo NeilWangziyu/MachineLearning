@@ -1,4 +1,10 @@
 # MachineLearning
 Ziyu machine learning testing code
-from 莫凡python学习
-很有用
+
+some from 莫凡python
+
+really useful
+
+the other part from Tensorflow, Pytorch, Keras
+
+and sklearn library is really very useful
