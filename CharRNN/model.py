@@ -9,7 +9,7 @@ class PoetryModel(nn.Module):
         self.hidden_dim = hidden_dim
         self.embeddings = nn.Embedding(vocab_size, embeding_dim)
         self.lstm = nn.LSTM(embeding_dim, self.hidden_dim, num_layers=2)
-        self.linear = nn.Linear(self.hidden_dim, vocab_size)
+        self.linear1 = nn.Linear(self.hidden_dim, vocab_size)
 
     def forward(self, input, hidden=None):
         seq_len, batch_size = input.size()
@@ -24,5 +24,5 @@ class PoetryModel(nn.Module):
         output, hidden = self.lstm(embeds, (h_0, c_0))
         # output size: (seq_len,batch_size,hidden_dim)
 
-        output = self.linear(output.view(seq_len*batch_size, -1))
+        output = self.linear1(output.view(seq_len*batch_size, -1))
         return output, hidden

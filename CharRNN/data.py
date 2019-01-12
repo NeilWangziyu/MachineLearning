@@ -1,10 +1,12 @@
+# coding:utf-8
 import sys
 import os
 import json
 import re
 import numpy as np
 
-def _parseRawData(author=None, constrain=None, src='./chinese-poetry/json/simplified', category='poet.tang'):
+
+def _parseRawData(author=None, constrain=None, src='./chinese-poetry/json/simplified', category="poet.tang"):
     """
     code from https://github.com/justdark/pytorch-poetry-gen/blob/master/dataHandler.py
     处理json文件，返回诗歌内容
@@ -18,18 +20,17 @@ def _parseRawData(author=None, constrain=None, src='./chinese-poetry/json/simpli
         .........
         ]
     """
+
     def sentenceParse(para):
         # para 形如 "-181-村橋路不端，數里就迴湍。積壤連涇脉，高林上笋竿。早嘗甘蔗淡，
         # 生摘琵琶酸。（「琵琶」，嚴壽澄校《張祜詩集》云：疑「枇杷」之誤。）
         # 好是去塵俗，煙花長一欄。"
-        result, number = re.subn(u"(.*)", "", para)
+        result, number = re.subn(u"（.*）", "", para)
         result, number = re.subn(u"{.*}", "", result)
         result, number = re.subn(u"《.*》", "", result)
         result, number = re.subn(u"《.*》", "", result)
         result, number = re.subn(u"[\]\[]", "", result)
-
         r = ""
-
         for s in result:
             if s not in set('0123456789-'):
                 r += s
@@ -47,7 +48,7 @@ def _parseRawData(author=None, constrain=None, src='./chinese-poetry/json/simpli
             p = poetry.get("paragraphs")
             flag = False
             for s in p:
-                sp = re.split(u"[,！。]", s)
+                sp = re.split(u"[，！。]", s)
                 for tr in sp:
                     if constrain is not None and len(tr) != constrain and len(tr) != 0:
                         flag = True
@@ -63,46 +64,49 @@ def _parseRawData(author=None, constrain=None, src='./chinese-poetry/json/simpli
                 rst.append(pdata)
         return rst
 
-
     data = []
     for filename in os.listdir(src):
         if filename.startswith(category):
             data.extend(handleJson(src + filename))
     return data
 
-def pad_sequences(sequences, maxlen=None, dtype = 'int32', padding = 'pre',truncating='pre',value=0. ):
-    """
-       code from keras
-       Pads each sequence to the same length (length of the longest sequence).
-       If maxlen is provided, any sequence longer
-       than maxlen is truncated to maxlen.
-       Truncation happens off either the beginning (default) or
-       the end of the sequence.
-       Supports post-padding and pre-padding (default).
-       Arguments:
-           sequences: list of lists where each element is a sequence
-           maxlen: int, maximum length
-           dtype: type to cast the resulting sequence.
-           padding: 'pre' or 'post', pad either before or after each sequence.
-           truncating: 'pre' or 'post', remove values from sequences larger than
-               maxlen either in the beginning or in the end of the sequence
-           value: float, value to pad the sequences to the desired value.
-       Returns:
-           x: numpy array with dimensions (number_of_sequences, maxlen)
-       Raises:
-           ValueError: in case of invalid values for `truncating` or `padding`,
-               or in case of invalid shape for a `sequences` entry.
-       """
-    if not hasattr(sequences, '__len__'):
-        raise ValueError('sequence must be iterable.')
 
+def pad_sequences(sequences,
+                  maxlen=None,
+                  dtype='int32',
+                  padding='pre',
+                  truncating='pre',
+                  value=0.):
+    """
+    code from keras
+    Pads each sequence to the same length (length of the longest sequence).
+    If maxlen is provided, any sequence longer
+    than maxlen is truncated to maxlen.
+    Truncation happens off either the beginning (default) or
+    the end of the sequence.
+    Supports post-padding and pre-padding (default).
+    Arguments:
+        sequences: list of lists where each element is a sequence
+        maxlen: int, maximum length
+        dtype: type to cast the resulting sequence.
+        padding: 'pre' or 'post', pad either before or after each sequence.
+        truncating: 'pre' or 'post', remove values from sequences larger than
+            maxlen either in the beginning or in the end of the sequence
+        value: float, value to pad the sequences to the desired value.
+    Returns:
+        x: numpy array with dimensions (number_of_sequences, maxlen)
+    Raises:
+        ValueError: in case of invalid values for `truncating` or `padding`,
+            or in case of invalid shape for a `sequences` entry.
+    """
+    if not hasattr(sequences, '__len__'):
+        raise ValueError('`sequences` must be iterable.')
     lengths = []
     for x in sequences:
         if not hasattr(x, '__len__'):
-            raise ValueError('sequences must be a list of iterables.'
-                             'Found non-iterable: '+str(x))
+            raise ValueError('`sequences` must be a list of iterables. '
+                             'Found non-iterable: ' + str(x))
         lengths.append(len(x))
-
 
     num_samples = len(sequences)
     if maxlen is None:
@@ -144,15 +148,12 @@ def pad_sequences(sequences, maxlen=None, dtype = 'int32', padding = 'pre',trunc
     return x
 
 
-
 def get_data(opt):
     """
-
     @param opt 配置选项 Config对象
     @return word2ix: dict,每个字对应的序号，形如u'月'->100
     @return ix2word: dict,每个序号对应的字，形如'100'->u'月'
     @return data: numpy数组，每一行是一首诗对应的字的下标
-
     """
     if os.path.exists(opt.pickle_path):
         data = np.load(opt.pickle_path)
@@ -177,7 +178,6 @@ def get_data(opt):
     new_data = [[word2ix[_word] for _word in _sentence]
                 for _sentence in data]
 
-
     # 诗歌长度不够opt.maxlen的在前面补空格，超过的，删除末尾的
     pad_data = pad_sequences(new_data,
                              maxlen=opt.maxlen,
@@ -191,12 +191,3 @@ def get_data(opt):
                         word2ix=word2ix,
                         ix2word=ix2word)
     return pad_data, word2ix, ix2word
-
-
-
-
-
-
-
-
-
