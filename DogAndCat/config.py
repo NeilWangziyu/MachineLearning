@@ -6,12 +6,12 @@ class DefaultConfig(object):
     vis_port = 8097
     model = 'SqueezeNet'
 
-    train_data_root = './DATASET_TRAIN/'
-    test_data_root = './DATASET_TEST/'
+    train_data_root = 'D:\\DogAndCat\\train\\train\\'
+    test_data_root = 'D:\\DogAndCat\\test1\\test1\\'
     load_model_path = None
 
-    batch_size = 32  # batch size
-    use_gpu = False  # user GPU or not
+    batch_size = 64  # batch size
+    use_gpu = True  # user GPU or not
     num_workers = 4  # how many workers for loading data
     print_freq = 20  # print info every N batch
 

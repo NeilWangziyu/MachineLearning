@@ -7,9 +7,7 @@ from torch.utils.data import DataLoader
 from torchnet import meter
 from utils.visualize import Visualizer
 from tqdm import tqdm
-
-
-
+import matplotlib.pyplot as plt
 
 
 
@@ -19,7 +17,6 @@ def write_csv(result, file_name):
         writer = csv.writer(f)
         writer.writerow(['id', 'label'])
         writer.writerows(result)
-
 
 
 def train(**kwargs):
@@ -36,6 +33,8 @@ def train(**kwargs):
 #     step 2 data
     train_data = DogCat(opt.train_data_root, train=True)
     val_data = DogCat(opt.train_data_root, train=False)
+
+
     train_dataloader = DataLoader(train_data, opt.batch_size,
                                   shuffle=True, num_workers=opt.num_workers)
     val_dataloader = DataLoader(val_data, opt.batch_size,
@@ -54,7 +53,7 @@ def train(**kwargs):
 
 
 
-#     train
+#   train
     for epoch in range(opt.max_epoch):
 
         loss_meter.reset()
@@ -78,9 +77,10 @@ def train(**kwargs):
 
             if (ii+1) % opt.print_freq == 0:
                 vis.plot('loss', loss_meter.value()[0])
+                print('loss', loss_meter.value()[0])
 
                 if os.path.exists(opt.debug_file):
-                    import ipdb;
+                    import ipdb
                     ipdb.set_trace()
     model.save()
 # # validate and visualize
@@ -88,6 +88,11 @@ def train(**kwargs):
 
     vis.plot('val_accuracy', val_accuracy)
     vis.log("epoch:{epoch},lr:{lr},loss:{loss},train_cm:{train_cm},val_cm:{val_cm}".format(
+        epoch=epoch, loss=loss_meter.value()[0], val_cm=str(val_cm.value()), train_cm=str(confusion_matrix.value()),
+        lr=lr))
+
+    print('val_accuracy', val_accuracy)
+    print("epoch:{epoch},lr:{lr},loss:{loss},train_cm:{train_cm},val_cm:{val_cm}".format(
         epoch=epoch, loss=loss_meter.value()[0], val_cm=str(val_cm.value()), train_cm=str(confusion_matrix.value()),
         lr=lr))
 
@@ -122,10 +127,6 @@ def val(model, dataloader):
     cm_value = confusion_matrix.value()
     accuracy = 100. * (cm_value[0][0] + cm_value[1][1]) / (cm_value.sum())
     return confusion_matrix, accuracy
-
-
-
-
 
 
 

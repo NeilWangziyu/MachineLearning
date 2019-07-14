@@ -5,7 +5,6 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
-
 from name_dataset import NameDataset
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
@@ -62,10 +61,10 @@ def pad_sequences(vectorized_seqs, seq_lengths, countries):
 
     # Return variables
     # DataParallel requires everything to be a Variable
-    return create_variable(seq_tensor), \
-        create_variable(seq_lengths), \
-        create_variable(target)
-
+    # return create_variable(seq_tensor), \
+    #     create_variable(seq_lengths), \
+    #     create_variable(target)
+    return seq_tensor, seq_lengths, target
 
 # Create necessary variables, lengths, and target
 def make_variables(names, countries):
@@ -210,3 +209,9 @@ if __name__ == '__main__':
         test("Jungwoo")
         test("Soojin")
         test("Nako")
+        test("Wang")
+        test("Huang")
+        test("James")
+        test("Owen")
+
+

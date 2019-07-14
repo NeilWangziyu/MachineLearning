@@ -90,7 +90,7 @@ for step in range(60):
     plt.pause(0.05)
 
 plt.ioff()
-plt
+plt.show()
 
 
 

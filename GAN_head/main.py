@@ -10,7 +10,7 @@ from torchnet.meter import AverageValueMeter
 
 
 class Config(object):
-    data_path = '/Users/ziyu/PycharmProjects/MachinLearning/GAN_head/data'
+    data_path = r'D:\Faces\faces'
     # 数据集存放路径
     num_workers = 4  # 多进程加载数据所用的进程数
     image_size = 96  # 图片尺寸
@@ -19,12 +19,12 @@ class Config(object):
     lr1 = 2e-4  # 生成器的学习率
     lr2 = 2e-4  # 判别器的学习率
     beta1 = 0.5  # Adam优化器的beta1参数
-    gpu = False  # 是否使用GPU
+    gpu = True  # 是否使用GPU
     nz = 100  # 噪声维度
     ngf = 64  # 生成器feature map数
     ndf = 64  # 判别器feature map数
 
-    save_path = '/Users/ziyu/PycharmProjects/MachinLearning/GAN_head/imgs/'  # 生成图片保存路径
+    save_path = r'D:\WangZiyu\PyCharm\GAN_head\imgs'  # 生成图片保存路径
 
     vis = False  # 是否使用visdom可视化
     env = 'GAN'  # visdom的env
@@ -55,9 +55,9 @@ def train(**kwargs):
     print(opt.data_path)
 
     device = t.device('cuda') if opt.gpu else t.device('cpu')
-    if opt.vis:
-        from visualize import Visualizer
-        vis = Visualizer(opt.env)
+    # if opt.vis:
+    #     from visualize import Visualizer
+    #     vis = Visualizer(opt.env)
 
 #     data
     transforms = tv.transforms.Compose([
@@ -138,18 +138,19 @@ def train(**kwargs):
                 optimizer_g.step()
                 errorg_meter.add(error_g.item())
 
-            if opt.vis and ii % opt.plot_every == opt.plot_every - 1:
-                ## 可视化
-                if os.path.exists(opt.debug_file):
-                    ipdb.set_trace()
-                fix_fake_imgs = netg(fix_noises)
-                vis.images(fix_fake_imgs.detach().cpu().numpy()[:64] * 0.5 + 0.5, win='fixfake')
-                vis.images(real_img.data.cpu().numpy()[:64] * 0.5 + 0.5, win='real')
-                vis.plot('errord', errord_meter.value()[0])
-                vis.plot('errorg', errorg_meter.value()[0])
+            # if opt.vis and ii % opt.plot_every == opt.plot_every - 1:
+            #     ## 可视化
+            #     if os.path.exists(opt.debug_file):
+            #         ipdb.set_trace()
+            # fix_fake_imgs = netg(fix_noises)
+            #     vis.images(fix_fake_imgs.detach().cpu().numpy()[:64] * 0.5 + 0.5, win='fixfake')
+            #     vis.images(real_img.data.cpu().numpy()[:64] * 0.5 + 0.5, win='real')
+            #     vis.plot('errord', errord_meter.value()[0])
+            #     vis.plot('errorg', errorg_meter.value()[0])
 
         if (epoch+1) % opt.save_every == 0:
             # 保存模型、图片
+            fix_fake_imgs = netg(fix_noises)
             tv.utils.save_image(fix_fake_imgs.data[:64], '%s/%s.png' % (opt.save_path, epoch), normalize=True,
                                 range=(-1, 1))
             t.save(netd.state_dict(), 'checkpoints/netd_%s.pth' % epoch)
@@ -193,9 +194,6 @@ def generate(**kwargs):
 
         # 保存图片
     tv.utils.save_image(t.stack(result), opt.gen_img, normalize=True, range=(-1, 1))
-
-
-
 
 
 
