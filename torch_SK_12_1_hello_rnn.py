@@ -17,8 +17,8 @@ y_data = [1, 0, 2, 3, 3, 4]
 x_one_hot = [one_hot_lookup[x] for x in x_data]
 
 # As we have one batch of samples, we will change them to variables only once
-inputs = Variable(torch.Tensor(x_one_hot))
-labels = Variable(torch.LongTensor(y_data))
+inputs = torch.Tensor(x_one_hot)
+labels = torch.LongTensor(y_data)
 
 num_classes = 5
 input_size = 5
